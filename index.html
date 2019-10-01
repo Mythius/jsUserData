@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Microphone</title>
+	<style>
+		body{
+			margin: 0;
+			background-color: gray;
+		}
+		div{
+			height: 50px;
+			background-color: green;
+			box-sizing: border-box;
+			transition: width .3s;
+			left: 0;
+		}
+		tile{
+			box-sizing: border-box;
+			border: 1px solid black;
+		}
+	</style>
+	<script src=helpers.js></script>
+	<script src=audio.js></script>
+	<script src=microphone.js></script>
+	<script src=grid.js></script>
+</head>
+<body>
+	<button>Start Microphone</button>
+	<br><br>
+	<div></div>
+	<cont></cont>
+	<br>
+	<p>Data</p>
+	<script>
+
+		var spect = new Grid(obj('cont'),100,50,8);
+		spect.setColorAll('black');
+		var m;
+		obj('button').on('click',function(){
+			m = new Microphone();
+			setInterval(loop,1000/10);
+		});
+
+
+		function loop(){
+			spect.setColorAll('black');
+			var width = window.innerWidth;
+			obj('div').style.width=width*m.getVolume()*1.5+'px';
+			var specs = m.getSounds();
+			let c=0;
+			for(let i=0;i<specs.length;i+=5){
+				let n=specs.slice(i,i+5).reduce((a,b)=>a+=b);
+				Fill(c++,n*10);
+			}
+			obj('p').innerHTML=m.getSounds().join('<br>');
+
+		}
+
+		function Fill(ix,n){
+			for(let i=25;i>25-n;i--){
+				spect.setColor(ix,i,'red');
+			}
+			for(let i=25;i<n*-1+25;i++){
+				spect.setColor(ix,i,'red');
+			}
+		}
+
+	</script>
+</body>
+</html>
